@@ -1,0 +1,12 @@
+{
+  "name": "resume-kit",
+  "version": "1.0.0",
+  "description": "An agent-driven kit for building a master resume and generating tailored resumes, cover letters, and ATS-safe PDFs from job descriptions.",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "pdf": "node scripts/txt_to_pdf.js",
+    "check-clean": "bash scripts/check-clean.sh"
+  },
+  "comment": "No dependencies by design. scripts/txt_to_pdf.js uses a browser you already have. If it cannot find one, `npm install puppeteer` and it will use that instead."
+}

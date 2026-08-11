@@ -1,0 +1,48 @@
+Alex Doe
+Portland, OR | (555) 010-0123 | alex.doe@example.com | linkedin.com/in/alexdoe | alexdoe.example.com
+
+Backend engineer with 8 years building and operating high-throughput services in Go and Python. Owns an event-driven order pipeline on Kafka that grew from 400k to 4 million events a day, taking p99 latency from 1.8s to 600ms across two re-architectures without adding instances. Three years primary on-call for a tier-1 service, and the author of the incident review process the platform org now uses. Works day to day in Go, Terraform, and AWS.
+
+CORE SKILLS
+
+High-Throughput Services in Go: Owned an order-processing pipeline through two re-architectures as volume grew from 400k to 4 million events per day, reducing p99 latency from 1.8s to 600ms on the same instance count.
+Event-Driven Architecture: Designed a Kafka event backbone replacing a nightly batch job, improving analytics data freshness from 18 hours to under 5 minutes and eliminating the reconciliation bugs that batch step caused.
+On-Call and Incident Response: Primary on-call for a tier-1 service for three years. Led the review for a 90-minute checkout outage; the resulting runbook and postmortem template were adopted across the platform org.
+Infrastructure as Code and AWS: Migrated 40+ services from hand-maintained CloudFormation to Terraform modules, reducing drift between staging and production. Eight years on AWS across EC2, S3, RDS, Lambda, and SQS.
+Developer Experience: Built an internal deployment CLI in Go used by all nine engineering teams, cutting median time from clone to first deploy for new engineers from three days to 40 minutes.
+Written Design Communication: Wrote the RFC process the backend org uses for cross-team design decisions, and mentored six engineers through onboarding.
+
+WORK EXPERIENCE
+
+SENIOR SOFTWARE ENGINEER | Fabrikam, Portland, OR (Remote)    03/2021 – Present
+Owned the order-processing pipeline through two re-architectures as volume grew from 400k to 4 million events per day, reducing p99 latency from 1.8s to 600ms without increasing instance count
+Designed and shipped a Kafka-based event backbone to replace a nightly batch job, improving analytics data freshness from 18 hours to under 5 minutes and eliminating an entire class of reconciliation bugs
+Served as primary on-call for a tier-1 service for three years in a six-week rotation, and led the incident review for a 90-minute checkout outage that produced the runbook and postmortem template now used across the platform org
+Built an internal deployment CLI in Go, used by all nine engineering teams, reducing median time from repo clone to first successful deploy for new hires from three days to 40 minutes
+Migrated 40+ services from hand-maintained CloudFormation to Terraform modules, reducing environment drift between staging and production
+Instrumented the order pipeline with OpenTelemetry tracing, making a previously invisible handoff between three services debuggable
+Introduced contract testing between the order service and its four downstream consumers, catching breaking schema changes in CI rather than in production
+Reduced CI pipeline runtime from 22 minutes to 7 by parallelizing the test suite and caching dependency layers
+Wrote the RFC process the backend org uses for cross-team design decisions, and mentored six engineers through onboarding
+
+SOFTWARE ENGINEER | Contoso Logistics, Portland, OR    06/2018 – 03/2021
+Built and maintained the carrier integration service in Python, connecting to 11 third-party shipping APIs with differing rate limits and failure modes
+Introduced a circuit breaker and retry-with-jitter layer that cut carrier-caused order failures by roughly 70%
+Added structured logging and correlation IDs across the service boundary, cutting mean time to diagnose a failed shipment from hours to minutes
+Replaced a hand-rolled job scheduler with Celery, removing a recurring class of duplicate-execution bugs
+Reduced AWS spend by 34% over two quarters through instance rightsizing and S3 lifecycle policies, with no measurable latency regression
+
+JUNIOR SOFTWARE ENGINEER | Adventure Works, Eugene, OR    07/2016 – 06/2018
+Built internal tools in Django for the operations team, replacing a spreadsheet-based workflow used by 30 people
+Fixed the top 20 recurring errors in the exception tracker over one quarter, reducing total error volume by about half
+
+TECHNICAL SKILLS
+
+Languages: Go, Python, SQL, TypeScript, Bash
+Data and Streaming: Kafka, PostgreSQL, Redis, Snowflake, dbt
+Infrastructure: AWS (EC2, S3, RDS, Lambda, SQS), Terraform, Docker, Kubernetes, GitHub Actions
+Observability: OpenTelemetry, Datadog, Grafana, Prometheus, Sentry
+
+EDUCATION
+
+Bachelor of Science, Computer Science | State University, Portland, OR    2016

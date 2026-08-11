@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------------------
+# Your personal data stays local by default.
+#
+# This repo is a template. Everything you put into it — your master resume,
+# the jobs you apply to, your old resumes, your application history — is
+# ignored by git so you cannot accidentally publish it.
+#
+# If you WANT to track your own data (e.g. in a private fork), delete the
+# lines in the "personal data" block below.
+# ---------------------------------------------------------------------------
+
+# --- personal data -------------------------------------------------------
+/master-resume.md
+/opportunities/*
+/resume-archive/*
+/History/*
+
+# keep the empty directories themselves
+!/opportunities/.gitkeep
+!/resume-archive/.gitkeep
+!/History/.gitkeep
+
+# generated documents, anywhere outside examples/
+*.docx
+*.doc
+# --- end personal data ---------------------------------------------------
+
+# your own terms for scripts/check-clean.sh
+.check-clean-terms
+
+# agent + editor local config
+.claude/settings.local.json
+.cursor/
+.idea/
+.vscode/
+
+# node
+node_modules/
+package-lock.json
+
+# os
+.DS_Store
+Thumbs.db
+
+# env
+.env
+.env.*

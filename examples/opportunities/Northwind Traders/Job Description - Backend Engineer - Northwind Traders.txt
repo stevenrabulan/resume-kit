@@ -1,0 +1,57 @@
+https://example.com/northwind-traders/careers/backend-engineer
+
+FICTIONAL EXAMPLE. Northwind Traders is a standard placeholder company name.
+This posting was written for this repo to demonstrate the workflow. It is not a
+real job.
+
+Backend Engineer, Order Platform
+Northwind Traders
+Remote (US) | Full-time
+
+About the role
+
+Northwind Traders moves several million orders a month for independent
+retailers. The Order Platform team owns the systems that accept, validate, and
+route those orders to fulfillment partners. We are looking for a backend engineer
+to help us take that platform through its next order of magnitude.
+
+This is a hands-on individual contributor role. You will own services in
+production, carry a pager in a shared rotation, and have real input into
+architecture decisions.
+
+What you'll do
+
+- Design, build, and operate high-throughput services in Go
+- Own the reliability of the order pipeline end to end, including on-call
+- Improve our event-driven architecture, currently built on Kafka
+- Partner with the Data team to make order data available for analytics without
+  a nightly batch step
+- Improve the developer experience for engineers working in the platform, from
+  local development through deploy
+- Participate in design review and write RFCs for significant changes
+
+What we're looking for
+
+- 5+ years building backend services in production
+- Strong Go, or strong experience in another statically typed language and a
+  genuine willingness to work in Go
+- Experience operating event-driven or streaming systems (Kafka, Kinesis, Pub/Sub
+  or similar)
+- Comfort with on-call and incident response. We care much more about how you
+  handle an outage than about whether you have ever caused one
+- Working knowledge of infrastructure as code (we use Terraform) and AWS
+- Clear written communication. A lot of our design work happens in documents
+
+Nice to have
+
+- Experience with observability tooling (we use OpenTelemetry and Datadog)
+- Experience improving CI or internal tooling
+- Mentorship experience
+
+What we offer
+
+- Remote-first, with an optional office in Seattle
+- 4 weeks PTO plus company holidays
+- Home office and learning budgets
+
+Northwind Traders is an equal opportunity employer.
