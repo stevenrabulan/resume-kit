@@ -31,19 +31,35 @@ these already covers.
 | Shares a job posting, or asks for a resume for a company | `skills/resume-builder.md` |
 | Asks for a cover letter | `skills/cover-letter-builder.md` |
 
+## Vocabulary
+
+`CONTEXT.md` at the repo root is the glossary. Use its terms exactly, in
+documents and in conversation with the user. It resolves words that are
+genuinely overloaded here, including **Skill** (an agent workflow) versus
+**Competency** (a line in a resume's CORE SKILLS section).
+
 ## Modifying this repo
 
 If you are changing how this kit works rather than using it, read
-**`docs/DECISIONS.md` first.** It records which choices are load-bearing and why.
-Several things that look like oversights are deliberate, and it names them.
+**`docs/adr/` first.** Several things that look like oversights are deliberate,
+and each ADR names one. The most likely to be "fixed" by mistake:
+
+- `0002` — the `.claude/skills/` stubs are meant to be empty of content
+- `0005` — PDF generation must stay dependency-free
+- `0006` — the role-type taxonomy was removed on purpose
+
+`docs/STATUS.md` records what has and has not been verified, and what is still
+open.
 
 ## Layout
 
 ```
 master-resume.md          the source of truth (gitignored, you create it)
+CONTEXT.md                glossary — the words this repo uses and means
 templates/                the master resume template
 skills/                   canonical workflow instructions
-docs/DECISIONS.md         why this repo is built the way it is
+docs/adr/                 why this repo is built the way it is
+docs/STATUS.md            what is verified, what is open
 scripts/
   txt_to_pdf.js           .txt resume -> ATS-safe PDF
   check-clean.sh          scans for personal data before publishing a fork
