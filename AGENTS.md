@@ -31,12 +31,19 @@ these already covers.
 | Shares a job posting, or asks for a resume for a company | `skills/resume-builder.md` |
 | Asks for a cover letter | `skills/cover-letter-builder.md` |
 
+## Modifying this repo
+
+If you are changing how this kit works rather than using it, read
+**`docs/DECISIONS.md` first.** It records which choices are load-bearing and why.
+Several things that look like oversights are deliberate, and it names them.
+
 ## Layout
 
 ```
 master-resume.md          the source of truth (gitignored, you create it)
 templates/                the master resume template
 skills/                   canonical workflow instructions
+docs/DECISIONS.md         why this repo is built the way it is
 scripts/
   txt_to_pdf.js           .txt resume -> ATS-safe PDF
   check-clean.sh          scans for personal data before publishing a fork
