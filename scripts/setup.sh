@@ -97,7 +97,18 @@ fi
 printf '\n%sTesting PDF generation%s\n' "$BOLD" "$RESET"
 
 EXAMPLE="examples/opportunities/Northwind Traders/Alex Doe - Resume - Backend Engineer - Northwind Traders.txt"
-if [ ! -f "$EXAMPLE" ]; then
+if [ "$(uname -s)" = "Darwin" ] && [ -n "${CODEX_SANDBOX:-}" ]; then
+  # Codex's macOS sandbox denies the mach-lookups any Chromium-based browser
+  # needs to start at all (see openai/codex#30043). Attempting the render
+  # here would crash Chrome and pop a macOS crash dialog for no benefit; skip
+  # it and say why, rather than telling the user to "fix" an environment
+  # limitation they can't fix from inside this script.
+  warn "skipped: Codex's macOS sandbox blocks browser launches (not fixable here)"
+  printf '    %sThis is a known Codex limitation, not a resume-kit bug:%s\n' "$DIM" "$RESET"
+  printf '      https://github.com/openai/codex/issues/30043\n'
+  printf '    %sWhen you need a PDF, ask the agent to run that step with escalated%s\n' "$DIM" "$RESET"
+  printf '    %sor unsandboxed permissions, or run it yourself in a plain Terminal.%s\n' "$DIM" "$RESET"
+elif [ ! -f "$EXAMPLE" ]; then
   warn "example resume missing, skipping test"
 elif ! command -v node >/dev/null 2>&1; then
   warn "skipped (node is required)"

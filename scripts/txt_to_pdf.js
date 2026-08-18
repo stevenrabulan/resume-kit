@@ -66,6 +66,56 @@ Pick whichever is easiest:
   3. Install Google Chrome: https://www.google.com/chrome/
 `;
 
+// On macOS, Codex spawns sandboxed shell commands with CODEX_SANDBOX=seatbelt
+// (documented in openai/codex, codex-rs/core/src/spawn.rs). That sandbox
+// denies the mach-lookups (windowserver, launchservicesd, and the Chromium
+// process rendezvous service) that any Chromium-based browser needs just to
+// start, in every mode, headless included, with no launch flag that bypasses
+// it. See https://github.com/openai/codex/issues/30043 and
+// https://github.com/openai/codex/issues/31560. There is no in-process
+// workaround, so it is not worth attempting the launch: check up front and
+// fail fast with the fix, instead of letting Chrome abort and macOS throw up
+// a crash dialog.
+function isInsideKnownBrowserHostileSandbox() {
+  return process.platform === "darwin" && !!process.env.CODEX_SANDBOX;
+}
+
+function sandboxPreflightMessage(inputPath) {
+  return `
+Skipping the PDF render: this shell is running inside Codex's macOS sandbox
+(CODEX_SANDBOX is set), which blocks a real browser from starting at all. This
+is a known Codex sandbox limitation, not a bug in resume-kit or in Chrome —
+see https://github.com/openai/codex/issues/30043. Attempting it anyway would
+just crash Chrome and pop a macOS crash dialog.
+
+Fix: ask the agent to re-run this exact command with escalated or unsandboxed
+permissions. If that is not available, run it yourself in a plain Terminal
+window instead:
+
+  node scripts/txt_to_pdf.js "${inputPath}"
+`;
+}
+
+// Fallback for sandboxes that block the same launch without setting
+// CODEX_SANDBOX (or any future variant of this problem). Same fix, phrased
+// for a launch that was actually attempted.
+function sandboxCrashMessage(inputPath) {
+  return `
+Chrome crashed immediately on launch (signal SIGABRT).
+
+If a coding agent is running this command inside a sandboxed shell, that
+sandbox is blocking the macOS calls a real browser needs to register itself,
+and Chrome aborts before it renders anything. This is a known sandbox
+limitation, not a bug in resume-kit or in Chrome.
+
+Fix: ask the agent to re-run this exact command with escalated or unsandboxed
+permissions. If that is not available, run it yourself in a plain Terminal
+window instead:
+
+  node scripts/txt_to_pdf.js "${inputPath}"
+`;
+}
+
 // Returns { kind: "binary", path } or { kind: "puppeteer" }.
 function resolveBrowser() {
   if (process.env.CHROME_PATH) {
@@ -284,6 +334,11 @@ async function printPdf(browser, htmlPath, outPath) {
 }
 
 (async () => {
+  if (isInsideKnownBrowserHostileSandbox()) {
+    console.error(sandboxPreflightMessage(input));
+    process.exit(1);
+  }
+
   let browser;
   try {
     browser = resolveBrowser();
@@ -296,9 +351,16 @@ async function printPdf(browser, htmlPath, outPath) {
   fs.writeFileSync(tmpHtml, html, "utf-8");
   try {
     await printPdf(browser, tmpHtml, output);
-  } finally {
+  } catch (err) {
     fs.unlinkSync(tmpHtml);
+    if (err.signal === "SIGABRT") {
+      console.error(sandboxCrashMessage(input));
+    } else {
+      console.error(`The browser failed to render the PDF: ${err.message}`);
+    }
+    process.exit(1);
   }
+  fs.unlinkSync(tmpHtml);
 
   if (!fs.existsSync(output)) {
     console.error("The browser did not produce a PDF.");

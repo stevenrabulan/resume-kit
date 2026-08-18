@@ -28,7 +28,31 @@ The rule that makes it work: **nothing appears in a tailored document that is no
 in your master resume or that you have not just confirmed.** The agent selects,
 it does not invent.
 
-## Getting started
+## Quickstart
+
+Open Claude Code or Codex in an empty folder and paste this:
+
+```
+Clone https://github.com/stevenrabulan/resume-kit.git into a new folder called
+resume-kit, cd into it, then read AGENTS.md and skills/start.md and start.
+```
+
+That's the whole setup. The agent clones the kit, checks your toolchain, and
+asks whether you have old resumes to drop into `resume-archive/` or would
+rather build your master resume by answering questions instead. Either way you
+land in the same home menu described below.
+
+**Requirements:** Node.js, and Chrome or any Chromium-based browser. No npm
+install, no API keys, no accounts.
+
+This clones the kit directly, which is fine for trying it out; your data stays
+local and gitignored regardless. If you want your own copy on GitHub to push
+to later, click **Use this template** at the top of the repo first, then swap
+that URL for your fork's in the paste above.
+
+Want the same process broken into manual steps instead? Keep reading.
+
+## Getting started by hand
 
 **1. Clone it.**
 
@@ -157,6 +181,19 @@ line starts with `-` or `•`. The rules are in `skills/resume-builder.md`.
 
 **The agent is inventing things** — point it back at `AGENTS.md`. If a claim is
 not in your master resume, it should be asking you, not writing it.
+
+**PDF generation says it's skipping because of a sandbox, or (rarely) Chrome
+crashes with a "quit unexpectedly" dialog** — this is a known limitation of
+Codex's default sandboxed shell on macOS, not a resume-kit bug: it blocks a
+browser from starting at all, with no workaround from inside the sandbox
+([openai/codex#30043](https://github.com/openai/codex/issues/30043)). The
+PDF script detects this and stops before it can crash anything. Ask your
+agent to re-run the PDF step with escalated or unsandboxed permissions, or
+run it yourself in a plain Terminal window:
+
+```bash
+node scripts/txt_to_pdf.js "opportunities/[Company]/[resume].txt"
+```
 
 ## Contributing
 
