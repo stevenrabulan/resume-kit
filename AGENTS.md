@@ -153,5 +153,19 @@ The script has no npm dependencies. It renders through a Chrome-based browser
 already on the machine. If it cannot find one, its error message lists the
 options (`CHROME_PATH`, or `npm install puppeteer`).
 
+This command launches a real browser process, not a library call. On macOS,
+Codex's default sandboxed execution blocks that unconditionally: it denies
+the browser the system calls it needs just to start, with no flag or
+alternate browser that works around it (openai/codex#30043). If you are
+Codex running on macOS, check for `CODEX_SANDBOX` in your environment before
+you run this command (or `scripts/setup.sh`) at all, and if it is set,
+request escalated or unsandboxed permissions for that one command up front —
+do not run it inside the sandbox first and wait for it to fail. The script
+also detects this itself and exits with the same guidance instead of
+attempting the launch, but asking for escalation before running it is faster
+for the user: one approval prompt instead of a failed attempt and a retry.
+Other sandboxed agents can hit the same wall without setting that variable;
+if the script reports a Chrome crash (SIGABRT), the fix is identical.
+
 It parses the `.txt` literally, so the layout rules in `skills/resume-builder.md`
 are functional, not cosmetic.
