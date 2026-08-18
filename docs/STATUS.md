@@ -2,7 +2,7 @@
 
 Where the repo stands. Not a decision record — see `docs/adr/` for those.
 
-Last updated 2026-08-12.
+Last updated 2026-08-18.
 
 ## Verified
 
@@ -15,24 +15,31 @@ Checked on macOS at build time:
   stay tracked
 - `check-clean.sh` detectors tested against a planted leak file; email, phone,
   LinkedIn, and street-address patterns all fired
+- Git history scanned end to end for credentials and real contact data. Clean.
+  The only personal data in the repo is the copyright holder in `LICENSE`
 
 ## Not verified
 
-- The **Linux and Windows browser paths** in `scripts/txt_to_pdf.js` and
-  `setup.sh` were written from knowledge, not tested on those platforms
-- The **Puppeteer fallback path** has never been exercised
+- The **Windows browser paths** in `scripts/txt_to_pdf.js` and `setup.sh` were
+  written from knowledge and have never run on Windows
+- The **Puppeteer fallback path** has never been exercised. CI finds a system
+  browser on both runners, so it does not cover this either
 
-If someone reports a PDF failure on a non-Mac machine, start there.
+Linux is now covered: `.github/workflows/ci.yml` runs `setup.sh` and a PDF render
+on `ubuntu-latest` alongside `macos-latest`. If someone reports a PDF failure,
+check whether it is Windows or the Puppeteer fallback before anything else.
 
 ## Open
 
-- No git remote. Never pushed. Publishing is a manual step.
 - After the first push, GitHub's **Template repository** setting needs enabling so
-  people get "Use this template" instead of a fork.
+  people get "Use this template" instead of a fork. `README.md` already tells
+  them to click it.
+- The repo needs a **description and topics** on GitHub. They are the only way
+  anyone finds this.
 - `LICENSE` names a copyright holder. That name is the only personal data in the
   repo and the only expected hit from `check-clean.sh`.
-- The cleanup plan for the private repo this was extracted from lives outside
-  this repo, at `resume-tools/CLEANUP-original-repo.md`, and has not been run.
+- CI has never run. The first push is also the first real test of
+  `.github/workflows/ci.yml`.
 
 ## Excluded from the public kit
 

@@ -1,0 +1,73 @@
+name: CI
+
+# Two jobs on purpose. macOS is the platform this kit was built and verified on.
+# Ubuntu exercises the Linux browser paths in setup.sh and scripts/txt_to_pdf.js,
+# which were written from knowledge rather than tested. See docs/STATUS.md.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  toolchain:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Report the browser CI found
+        run: |
+          for candidate in \
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+            "/usr/bin/google-chrome" \
+            "/usr/bin/google-chrome-stable" \
+            "/usr/bin/chromium" \
+            "/usr/bin/chromium-browser"; do
+            if [ -x "$candidate" ]; then
+              echo "found: $candidate"
+              exit 0
+            fi
+          done
+          echo "No Chrome-based browser on this runner image."
+          echo "The PDF step below will fail. Fix the runner, not the script."
+          exit 1
+
+      - name: setup.sh passes every check
+        run: ./setup.sh
+
+      - name: Render the example resume to PDF
+        run: |
+          IN="examples/opportunities/Northwind Traders/Alex Doe - Resume - Backend Engineer - Northwind Traders.txt"
+          OUT="$RUNNER_TEMP/ci-render.pdf"
+          node scripts/txt_to_pdf.js "$IN" "$OUT"
+          [ -s "$OUT" ] || { echo "PDF is empty"; exit 1; }
+          head -c 4 "$OUT" | grep -q '%PDF' || { echo "Output is not a PDF"; exit 1; }
+          # An ATS reads text, so the page must carry fonts rather than a raster
+          # image. This check is what would notice if that ever changed.
+          grep -aq 'Font' "$OUT" || { echo "No font objects in the PDF"; exit 1; }
+          echo "Rendered $(wc -c < "$OUT") bytes"
+
+      - name: No personal data in tracked files
+        run: bash scripts/check-clean.sh
+
+      - name: setup.sh left the tree clean
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "setup.sh modified tracked files:"
+            git status --porcelain
+            exit 1
+          fi

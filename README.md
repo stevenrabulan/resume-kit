@@ -25,8 +25,10 @@ it does not invent.
 
 ## Getting started
 
+Click **Use this template** at the top of the repo to get your own copy, then:
+
 ```bash
-git clone <your-fork> resume-kit
+git clone https://github.com/stevenrabulan/resume-kit.git
 cd resume-kit
 ./setup.sh
 ```
@@ -119,6 +121,12 @@ line starts with `-` or `•`. The rules are in `skills/resume-builder.md`.
 
 **The agent is inventing things** — point it back at `AGENTS.md`. If a claim is
 not in your master resume, it should be asking you, not writing it.
+
+## Contributing
+
+Bug reports are welcome, especially from platforms this has not been tested on.
+See `CONTRIBUTING.md`, and read `docs/adr/` before proposing a change: several
+things that look like oversights are deliberate.
 
 ## License
 
