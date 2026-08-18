@@ -26,15 +26,17 @@ these already covers.
 
 | When the user... | Read |
 | --- | --- |
-| Has just cloned this repo, or `master-resume.md` is missing | `skills/setup.md` |
+| Says "start", has just cloned this repo, or `master-resume.md` is missing | `skills/start.md` |
 | Wants to build or update their master resume | `skills/master-resume-builder.md` |
+| Says their Archived Resumes are in Google Docs or Drive | `skills/google-docs-export.md` |
 | Shares a job posting, or asks for a resume for a company | `skills/resume-builder.md` |
 | Asks for a cover letter | `skills/cover-letter-builder.md` |
 
 ## Vocabulary
 
-`CONTEXT.md` at the repo root is the glossary. Use its terms exactly, in
-documents and in conversation with the user. It resolves words that are
+`CONTEXT.md` at the repo root is the glossary. Use its terms exactly in this
+file, in `skills/`, and in the stubs. It names two exemptions, `README.md` and
+what you say out loud to the user, and explains why. It resolves words that are
 genuinely overloaded here, including **Skill** (an agent workflow) versus
 **Competency** (a line in a resume's CORE SKILLS section).
 
@@ -47,6 +49,7 @@ and each ADR names one. The most likely to be "fixed" by mistake:
 - `0002` — the `.claude/skills/` stubs are meant to be empty of content
 - `0005` — PDF generation must stay dependency-free
 - `0006` — the role-type taxonomy was removed on purpose
+- `0007` — the Confirmation Pass confirms per role, not per bullet
 
 `docs/STATUS.md` records what has and has not been verified, and what is still
 open.
@@ -61,11 +64,12 @@ skills/                   canonical workflow instructions
 docs/adr/                 why this repo is built the way it is
 docs/STATUS.md            what is verified, what is open
 scripts/
+  setup.sh                environment preflight; `--agent` when you run it
   txt_to_pdf.js           .txt resume -> ATS-safe PDF
   check-clean.sh          scans for personal data before publishing a fork
 examples/                 a fictional worked example, committed on purpose
 opportunities/            one folder per company you apply to (gitignored)
-resume-archive/           your old resumes, source material (gitignored)
+resume-archive/           Archived Resumes, source material (gitignored)
 History/                  log of what was created and why (gitignored)
 ```
 
@@ -115,6 +119,12 @@ When uncertain, ask the user this exact question and wait for an answer:
 
 Never treat silence as approval for something you inferred rather than were
 told.
+
+**One exception, and only one.** During the Confirmation Pass in
+`skills/master-resume-builder.md`, a user accepts a whole role's extracted
+bullets at once. Bullets carrying an unverifiable number or a strong ownership
+verb are still asked individually, by name. Everywhere else, per claim.
+`docs/adr/0007-archive-first-onboarding.md` records why the exception exists.
 
 ## Fetching job postings
 

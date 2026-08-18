@@ -30,6 +30,7 @@
 
 # agent + editor local config
 .claude/settings.local.json
+.scratch/
 .cursor/
 .idea/
 .vscode/

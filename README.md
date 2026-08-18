@@ -10,9 +10,14 @@ Code, Codex, Cursor, or anything else that can read files in a directory.
 
 ## How it works
 
-You do the hard part once. The agent interviews you about your career and writes
-**`master-resume.md`**, a deliberately over-long bank of every truthful thing you
-have done. It is not a resume. Nobody ever sees it.
+You do the hard part once. Drop your old resumes into `resume-archive/`. The
+agent reads all of them, shows you what it found one job at a time so you can
+correct it, then asks you about your career to fill in what those resumes left
+out. What comes out is **`master-resume.md`**, a deliberately over-long bank of
+every truthful thing you have done. It is not a resume. Nobody ever sees it.
+
+No old resumes? The agent builds it by asking you from scratch. That takes longer
+and works just as well.
 
 After that, each application is a selection problem rather than a writing
 problem. You paste a job posting; the agent picks the bullets that match, mirrors
@@ -25,28 +30,59 @@ it does not invent.
 
 ## Getting started
 
+**1. Clone it.**
+
 Click **Use this template** at the top of the repo to get your own copy, then:
 
 ```bash
 git clone https://github.com/stevenrabulan/resume-kit.git
 cd resume-kit
-./setup.sh
 ```
 
-`setup.sh` checks that Node and a browser are available, creates the working
-directories, and renders a test PDF to prove the toolchain works. Then it hands
-you a prompt to paste into your agent.
+**2. Copy your old resumes into `resume-archive/`.**
 
-The agent takes it from there: it reads any old resumes you drop into
-`resume-archive/`, interviews you to fill the gaps, and writes your master
-resume. Budget 30 to 60 minutes for that conversation. It is the whole ballgame.
+Any format: PDF, Word, plain text, Markdown. More is better, including the ones
+you think are out of date. That folder is gitignored, so nothing you put there
+can be published.
+
+Skip this step if you have none, or if yours live in Google Docs. The agent
+handles both.
+
+**3. Open the folder in your coding agent and start.**
+
+**Claude Code:** type `/start`.
+
+**Codex, Cursor, or anything else:** there is no slash command, so say it in
+words. Paste this:
+
+```
+Read AGENTS.md and skills/start.md, then start.
+```
+
+Codex picks up `AGENTS.md` on its own, so "start" alone often works. The paste
+above is the version that works everywhere, including agents that need to be
+pointed at the file. Either way you land in the same place, because the slash
+command is a stub that just reads `skills/start.md`. Nothing in this kit is
+Claude-specific.
+
+Either way you get the same home menu, and everything runs from there:
+
+1. Build or update your master resume
+2. Generate a tailored resume for a job posting
+3. Generate a cover letter
+
+It checks your toolchain and runs `scripts/setup.sh` when it needs to, so there
+is nothing to run by hand. Budget 30 to 60 minutes the first time through option
+1. It is the whole ballgame, and every application afterward takes about two
+minutes.
 
 **Requirements:** Node.js, and Chrome or any Chromium-based browser. No npm
 install, no API keys, no accounts.
 
 ## Applying to a job
 
-Paste a job posting into your agent and ask for a resume. It will:
+Pick option 2 from `/start`, or just paste a job posting into your agent and ask
+for a resume. Either way it will:
 
 1. Save the posting to `opportunities/[Company]/`
 2. Ask you about anything the posting wants that your master resume does not
@@ -93,10 +129,10 @@ nonzero if it finds any.
 
 ```
 AGENTS.md                 instructions your agent reads (CLAUDE.md points here)
-setup.sh                  environment preflight
-master-resume.md          your source of truth (created during setup)
+master-resume.md          your source of truth (the agent builds this with you)
 skills/                   the workflows, as plain markdown
 templates/                the master resume template
+scripts/setup.sh          environment preflight
 scripts/txt_to_pdf.js     .txt -> ATS-safe PDF, no dependencies
 scripts/check-clean.sh    personal data scanner
 examples/                 a complete worked example, fictional

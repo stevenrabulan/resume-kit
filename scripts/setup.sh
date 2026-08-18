@@ -4,10 +4,18 @@
 # Checks the things a coding agent cannot reliably check for itself, then hands
 # off to the agent for the part that actually needs a conversation.
 #
-# Usage: ./setup.sh
+# Usage: bash scripts/setup.sh [--agent]
+#
+#   --agent   An agent is already driving. Skips the closing instructions that
+#             tell a human to go open one.
 
 set -uo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.." || exit 1
+
+AGENT_DRIVEN=0
+for arg in "$@"; do
+  if [ "$arg" = "--agent" ]; then AGENT_DRIVEN=1; fi
+done
 
 if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
   BOLD=$'\033[1m'; DIM=$'\033[2m'; RED=$'\033[31m'
@@ -81,10 +89,8 @@ fi
 
 if [ -f master-resume.md ]; then
   pass "master-resume.md exists"
-  HAS_MASTER=1
 else
   warn "master-resume.md does not exist yet (the agent builds this with you)"
-  HAS_MASTER=0
 fi
 
 # ---------------------------------------------------------------------------
@@ -96,33 +102,35 @@ if [ ! -f "$EXAMPLE" ]; then
 elif ! command -v node >/dev/null 2>&1; then
   warn "skipped (node is required)"
 else
-  TMP_PDF="$(mktemp -t resume-kit-check).pdf"
+  # mktemp creates the extensionless file; the renderer needs the .pdf name.
+  # Both get cleaned up, or the mktemp one leaks on every run.
+  TMP_BASE="$(mktemp -t resume-kit-check)"
+  TMP_PDF="$TMP_BASE.pdf"
   if node scripts/txt_to_pdf.js "$EXAMPLE" "$TMP_PDF" >/dev/null 2>&1 && [ -s "$TMP_PDF" ]; then
     pass "rendered a test PDF successfully"
   else
     fail "could not render a PDF. Run this to see why:"
     printf '      node scripts/txt_to_pdf.js "%s"\n' "$EXAMPLE"
   fi
-  rm -f "$TMP_PDF"
+  rm -f "$TMP_BASE" "$TMP_PDF"
 fi
 
 # ---------------------------------------------------------------------------
 printf '\n'
 if [ "$FAILED" -eq 1 ]; then
-  printf '%s%sFix the items marked ✗ above, then run ./setup.sh again.%s\n\n' "$BOLD" "$RED" "$RESET"
+  printf '%s%sFix the items marked ✗ above, then run bash scripts/setup.sh again.%s\n\n' "$BOLD" "$RED" "$RESET"
   exit 1
 fi
 
 printf '%s%sEnvironment is ready.%s\n\n' "$BOLD" "$GREEN" "$RESET"
-printf 'The rest of setup is a conversation, because building a good master resume\n'
-printf 'means being interviewed about your work.\n\n'
-printf '%sNext step:%s open this folder in your coding agent and paste this prompt:\n\n' "$BOLD" "$RESET"
 
-if [ "$HAS_MASTER" -eq 1 ]; then
-  printf '  %s"Read AGENTS.md, then help me tailor a resume for a job I am applying to."%s\n\n' "$DIM" "$RESET"
-else
-  printf '  %s"Read AGENTS.md and skills/setup.md, then walk me through setting this up."%s\n\n' "$DIM" "$RESET"
+if [ "$AGENT_DRIVEN" -eq 1 ]; then
+  exit 0
 fi
 
+printf 'Everything else happens in conversation with a coding agent.\n\n'
+printf '%sNext step:%s open this folder in your agent and paste this prompt:\n\n' "$BOLD" "$RESET"
+printf '  %s"Read AGENTS.md and skills/start.md, then start."%s\n\n' "$DIM" "$RESET"
+printf 'In Claude Code, %s/start%s does the same thing.\n\n' "$BOLD" "$RESET"
 printf 'Works with Claude Code, Codex, Cursor, or any agent that can read files in\n'
-printf 'this directory. Claude Code will also pick up the skills automatically.\n\n'
+printf 'this directory.\n\n'

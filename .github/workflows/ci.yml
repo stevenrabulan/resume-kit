@@ -1,8 +1,9 @@
 name: CI
 
 # Two jobs on purpose. macOS is the platform this kit was built and verified on.
-# Ubuntu exercises the Linux browser paths in setup.sh and scripts/txt_to_pdf.js,
-# which were written from knowledge rather than tested. See docs/STATUS.md.
+# Ubuntu exercises the Linux browser paths in scripts/setup.sh and
+# scripts/txt_to_pdf.js, which were written from knowledge rather than tested.
+# See docs/STATUS.md.
 
 on:
   push:
@@ -47,7 +48,7 @@ jobs:
           exit 1
 
       - name: setup.sh passes every check
-        run: ./setup.sh
+        run: bash scripts/setup.sh --agent
 
       - name: Render the example resume to PDF
         run: |

@@ -21,7 +21,7 @@ bash scripts/check-clean.sh "Your Name" "Your Employer" yourdomain.com
 
 - A PDF that renders wrong, with the `.txt` that produced it (redacted, or from
   `examples/`), your OS, and your browser
-- `setup.sh` failing a check it should pass
+- `scripts/setup.sh` failing a check it should pass
 - `check-clean.sh` missing a pattern it should catch, or flagging something it
   should not
 - A skill that led an agent into a bad workflow, with the prompt you used
@@ -29,14 +29,15 @@ bash scripts/check-clean.sh "Your Name" "Your Employer" yourdomain.com
 ## Before you open a PR
 
 **Read `docs/adr/` first.** Several things in here look like oversights and are
-not. Each one has a decision record explaining why. The three most likely to be
+not. Each one has a decision record explaining why. The most likely to be
 "fixed" by mistake:
 
 | ADR | What it protects |
 | --- | --- |
-| `0002` | The `.claude/skills/` stubs are meant to contain no content |
+| `0002` | The `.claude/skills/` and `.agents/skills/` stubs are meant to contain no content |
 | `0005` | PDF generation must stay dependency-free |
 | `0006` | The role-type taxonomy was removed on purpose |
+| `0007` | The Confirmation Pass confirms per role, not per bullet |
 
 If you disagree with a decision record, that is a fair conversation. Open an
 issue arguing against the ADR rather than a PR quietly reversing it.
@@ -45,8 +46,9 @@ issue arguing against the ADR rather than a PR quietly reversing it.
 
 - **`AGENTS.md` is canonical.** Agent instructions go there or in `skills/`, not
   into a tool-specific file. `CLAUDE.md` is a pointer and stays a pointer.
-- **`skills/*.md` is the real content.** The `.claude/skills/` files exist only
-  so Claude Code can discover the skills.
+- **`skills/*.md` is the real content.** The `.claude/skills/` and
+  `.agents/skills/` files exist only so Claude Code and Codex can discover the
+  skills.
 - **Use the glossary.** `CONTEXT.md` defines the words this repo means precisely,
   including Skill versus Competency.
 - **No npm dependencies** in `scripts/`. Puppeteer stays an optional fallback the
@@ -56,7 +58,8 @@ issue arguing against the ADR rather than a PR quietly reversing it.
 ## Adding a new skill
 
 1. Write `skills/your-skill.md` as the canonical instructions
-2. Add a pointer stub at `.claude/skills/your-skill/SKILL.md`
+2. Add a pointer stub at `.claude/skills/your-skill/SKILL.md` and
+   `.agents/skills/your-skill/SKILL.md`
 3. Add a row to the skills table in `AGENTS.md`
 
 ## License

@@ -9,9 +9,10 @@ says they are applying somewhere.
 ## Prerequisite
 
 `master-resume.md` must exist. If it does not, stop and follow
-`skills/master-resume-builder.md` first. Do not attempt to write a resume from
-an old resume in `resume-archive/`; those are reference for phrasing only, never
-a source of facts.
+`skills/master-resume-builder.md` first. A Tailored Resume is built from
+confirmed facts, so it selects from the Master Resume alone. An Archived Resume
+in `resume-archive/` holds candidate claims that have not been through a
+Confirmation Pass, which is what building the Master Resume is for.
 
 ## Workflow
 

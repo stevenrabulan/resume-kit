@@ -5,10 +5,25 @@ career, then produce job-specific application documents by selecting from it.
 
 ## Language
 
+The _Avoid_ lists bind the documents an agent reads and follows: `AGENTS.md`,
+everything in `skills/`, and the `.claude/` stubs. Inside those, use the term.
+
+Two deliberate exemptions. `README.md` is read by someone who cloned this five
+minutes ago, to whom "Archived Resume" is jargon and "old resumes" is simply what
+they are; it stays in plain English. So does anything an agent says out loud to
+the user, including the quoted example blocks in `skills/`. This glossary exists
+to stop two documents meaning different things by the same word, not to push
+vocabulary onto the person using the kit.
+
 **Master Resume**:
 The single exhaustive record of every truthful claim about a person's career.
 Deliberately far too long to send anyone.
 _Avoid_: bullet bank, resume bank, source resume, profile
+
+**Draft Master Resume**:
+A Master Resume assembled from Archived Resumes but not yet put to the person.
+Every claim in it is unconfirmed. No Tailored Resume may select from it.
+_Avoid_: draft, extracted resume, provisional resume
 
 **Tailored Resume**:
 An application document for one Opportunity, produced by selecting from the
@@ -16,9 +31,16 @@ Master Resume. Never a source for another Tailored Resume.
 _Avoid_: generated resume, output resume, final resume
 
 **Archived Resume**:
-A resume the person wrote before adopting this kit. Source material for building
-the Master Resume, and reference for phrasing only, never for facts.
+A resume the person wrote before adopting this kit. The primary source material
+for a Draft Master Resume. A claim in one is a candidate, never a fact, until it
+survives a Confirmation Pass.
 _Avoid_: old resume, historical resume, previous resume
+
+**Confirmation Pass**:
+The step where a person is shown what was extracted from their Archived Resumes,
+one role at a time, and accepts, edits, or drops each claim. What turns a Draft
+Master Resume into the Master Resume.
+_Avoid_: review, approval, verification step
 
 **Posting**:
 The full text of one advertised job at one company.
