@@ -88,6 +88,8 @@ infrastructure. Not looking for people management right now.
 > Header format, used verbatim by the PDF generator:
 >   ### Job Title | Company, Location (Remote) — MM/YYYY – MM/YYYY
 >
+> Write job titles in title case ("Senior Software Engineer"), not ALL CAPS.
+>
 > Good bullets state what you did, how, and what changed as a result. Prefer
 > numbers you could defend in an interview over numbers that sound impressive.
 

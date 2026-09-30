@@ -56,9 +56,16 @@ Compare the posting's requirements against `master-resume.md`. Where the posting
 asks for something important that the master resume does not cover, ask the user
 directly whether they have that experience.
 
-Ask before drafting, not after. Anything they confirm gets appended to
-`master-resume.md` (see `skills/master-resume-builder.md`, "Extending") so it is
-never lost again.
+Areas that often turn out to be real but missing:
+
+- Testing (unit, integration, end to end, and which frameworks)
+- Accessibility (WCAG, screen readers, semantic HTML)
+- Greenfield versus established codebases
+- Domain experience the posting names (legal, payments, health, and so on)
+- Depth in a specific tool: hands-on daily, or collaborating with someone who was
+
+Ask before drafting, not after. Anything they confirm gets written back to
+`master-resume.md` in step 10, so the same gap is never asked about twice.
 
 ### 5. Select and order
 
@@ -67,7 +74,8 @@ Pull the bullets from `master-resume.md` that match the posting. Drop the rest.
 - Lead each role with its most relevant bullet, not its chronologically first.
 - Cut roles that add nothing. A 12-year-old job unrelated to the posting is
   taking space from something better.
-- Aim for one page for under ten years of experience, two pages above that.
+- Stay within the page limit: one page for under ten years of experience, two
+  pages above that. Never more than two. Step 8 checks it.
 
 ### 6. Mirror the posting's language
 
@@ -81,8 +89,8 @@ that phrase word for word.
   accurate.
 - Only mirror a phrase when it is true. The accuracy guardrails in `AGENTS.md`
   always win over keyword matching.
-- Do not keyword-stuff. Weave phrases into real accomplishment lines. Never bolt
-  on a phrase with nothing behind it.
+- Do not keyword-stuff. Weave phrases into real Bullets and the summary. Never
+  bolt on a phrase with nothing behind it.
 
 ### 7. Write the `.txt`
 
@@ -101,18 +109,18 @@ City, ST | (555) 010-0100 | email@example.com | linkedin.com/in/handle | site.co
 
 Summary paragraph, two to four sentences, tailored to this posting.
 
-CORE SKILLS
+Core Skills
 
-Skill Label: Description text on one line.
-Skill Label: Description text on one line.
+Skill Label: Description text on one line
+Skill Label: Description text on one line
 
-WORK EXPERIENCE
+Work Experience
 
-JOB TITLE | Company, City, ST (Remote)    MM/YYYY – MM/YYYY
+Job Title | Company, City, ST (Remote)    MM/YYYY – MM/YYYY
 Accomplishment line with no bullet character
 Accomplishment line with no bullet character
 
-EDUCATION
+Education
 
 Bachelor of Science, Field | University, City, ST    2015
 ```
@@ -120,11 +128,30 @@ Bachelor of Science, Field | University, City, ST    2015
 Rules the parser depends on:
 
 - Line 1 is the name. Line 2 is the pipe-separated contact line.
-- Section headings are ALL CAPS and contain no `|`.
+- Section headings are five words or fewer, start with a capital letter, and
+  contain only letters, digits, spaces, `&`, and `/`. A longer line, or one
+  with any other punctuation, is read as a Bullet. So a Bullet of five words or
+  fewer with no punctuation ("Mentored six junior engineers") is read as a
+  heading: lengthen it or fold it into another Bullet.
 - Job header lines contain a `|` and separate the date with **two or more
   spaces**.
-- Accomplishment lines have **no** leading `-`, `*`, or `•`.
-- Skill lines are `Label: text`.
+- Bullets have **no** leading `-`, `*`, or `•`.
+- Competencies are `Label: text`.
+
+Style rules, which serve the reader rather than the parser:
+
+- **No stylistic all-caps.** Section headings and job titles are title case
+  ("Work Experience", "Senior Software Engineer"). Acronyms stay uppercase: AWS,
+  API, CI/CD, SEO.
+- **One ending style.** Bullets and Competencies either all end with a period
+  or all omit it. Do not mix within a resume.
+- **No pronouns.** Bullets and the summary drop the subject. Never "I", "he",
+  "she", or "they" for the user.
+- **Lead with an action verb.** Not an adjective, not "Hands-on with".
+- **Vary leading verbs.** Before saving, skim the Bullets. If the same verb opens
+  several nearby Bullets ("Built", "Built", "Built"), vary it with a truthful
+  alternative. Never upgrade the verb while varying it.
+- **No em-dashes.** Use a comma, a colon, parentheses, or two sentences.
 
 ### 8. Generate the PDF
 
@@ -132,9 +159,24 @@ Rules the parser depends on:
 node scripts/txt_to_pdf.js "opportunities/[Company]/[the .txt file]"
 ```
 
-This writes the `.pdf` next to the `.txt`. Never copy-paste the text into a word
-processor to make the PDF; that breaks the formatting and often the ATS parsing
-too. The `.txt` is the source of truth and the PDF is derived from it.
+This writes the `.pdf` next to the `.txt` and prints its page count. Never
+copy-paste the text into a word processor to make the PDF; that breaks the
+formatting and often the ATS parsing too. The `.txt` is the source of truth and
+the PDF is derived from it.
+
+Check the page count every time the PDF is generated, first draft or
+regeneration. If it is over the limit from step 5:
+
+1. Cut the lowest-impact Bullet from the `.txt`. Cut first a Bullet that
+   restates a Competency, then the least relevant Bullet from the oldest or
+   least relevant role.
+2. Regenerate and check again.
+3. Repeat until it fits.
+
+If a two-page resume comes out at one page, consider whether a cut line should
+come back. If the script says it could not read the page count, open the PDF
+and count, or ask the user to. Never show the user a PDF whose page count you
+have not checked.
 
 If the script reports it cannot find a browser, its error message lists the
 fixes. Relay them.
@@ -144,7 +186,13 @@ fixes. Relay them.
 Show the resume. Ask directly whether any claim needs softening. Do not treat
 silence as approval on anything you inferred rather than were told.
 
-### 10. Log it
+### 10. Write back to the master resume
+
+Append every fact the user confirmed in this conversation, from the gap check or
+from review, to `master-resume.md` (see `skills/master-resume-builder.md`,
+"Extending").
+
+### 11. Log it
 
 Append to `History/log.md`:
 

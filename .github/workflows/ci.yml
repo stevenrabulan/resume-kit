@@ -54,13 +54,19 @@ jobs:
         run: |
           IN="examples/opportunities/Northwind Traders/Alex Doe - Resume - Backend Engineer - Northwind Traders.txt"
           OUT="$RUNNER_TEMP/ci-render.pdf"
-          node scripts/txt_to_pdf.js "$IN" "$OUT"
+          node scripts/txt_to_pdf.js "$IN" "$OUT" | tee "$RUNNER_TEMP/render.log"
           [ -s "$OUT" ] || { echo "PDF is empty"; exit 1; }
           head -c 4 "$OUT" | grep -q '%PDF' || { echo "Output is not a PDF"; exit 1; }
           # An ATS reads text, so the page must carry fonts rather than a raster
           # image. This check is what would notice if that ever changed.
           grep -aq 'Font' "$OUT" || { echo "No font objects in the PDF"; exit 1; }
+          # The example is a two-page resume. Page breaks that push a job onto
+          # a third page, or a page count the script cannot read, fail here.
+          grep -q '(2 pages)' "$RUNNER_TEMP/render.log" || { echo "Expected 2 pages"; exit 1; }
           echo "Rendered $(wc -c < "$OUT") bytes"
+
+      - name: txt_to_pdf.js tests pass
+        run: bash scripts/txt_to_pdf.test.sh
 
       - name: check-clean.sh tests pass
         run: bash scripts/check-clean.test.sh

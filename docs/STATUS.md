@@ -16,6 +16,9 @@ Checked on macOS at build time:
 - `check-clean.sh` covered by `scripts/check-clean.test.sh` (run in CI): fails on
   a term in tracked or untracked files, warns on ignored files, fails with no
   terms
+- `txt_to_pdf.js` heading detection and page-break styling covered by
+  `scripts/txt_to_pdf.test.sh` (run in CI, no browser needed). CI also checks
+  the example renders to exactly two pages
 - Git history scanned end to end for credentials and real contact data. Clean.
   The only personal data in the repo is the copyright holder in `LICENSE`
 
