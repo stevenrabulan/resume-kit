@@ -169,3 +169,7 @@ if the script reports a Chrome crash (SIGABRT), the fix is identical.
 
 It parses the `.txt` literally, so the layout rules in `skills/resume-builder.md`
 are functional, not cosmetic.
+
+## Local overrides
+
+If LOCAL.md exists, read it, and it overrides anything above.

@@ -10,7 +10,7 @@
 # ---------------------------------------------------------------------------
 
 # --- personal data -------------------------------------------------------
-/master-resume.md
+/*[Mm]aster[-_ ][Rr]esume*.md
 /opportunities/*
 /resume-archive/*
 /History/*
@@ -27,6 +27,20 @@
 
 # your own terms for scripts/check-clean.sh
 .check-clean-terms
+
+# private overrides and tooling (see "Local overrides" in AGENTS.md)
+/LOCAL.md
+/local/
+/.agents/skills/coach/
+/.agents/skills/scout/
+/.claude/skills/coach
+/.claude/skills/scout
+/.claude/skills/coach-update
+/skills-lock.json
+/scripts/update-coach.sh
+/scripts/kit-diff.sh
+/kit-paths
+/transcript-builder/
 
 # agent + editor local config
 .claude/settings.local.json
