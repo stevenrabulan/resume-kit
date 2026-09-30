@@ -8,6 +8,6 @@ real selectable text, no tables or images.
 ## Consequences
 
 The layout rules in `skills/resume-builder.md` are parsed literally, so they are
-functional rather than cosmetic: short unpunctuated section headings, a `|` in job headers,
-two or more spaces before a trailing date, and no bullet characters on
-accomplishment lines. Never add a path that produces a PDF some other way.
+functional rather than cosmetic: short unpunctuated section headings, a `|` in
+job headers, two or more spaces before a trailing date, and no bullet characters
+on Bullets. Never add a path that produces a PDF some other way.

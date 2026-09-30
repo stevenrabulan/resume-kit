@@ -148,7 +148,7 @@ const args = process.argv.slice(2);
 const htmlOnly = args.includes("--html");
 const [input, outputArg] = args.filter((a) => a !== "--html");
 if (!input) {
-  console.error('Usage: node scripts/txt_to_pdf.js "<input.txt>" ["<output.pdf>"]');
+  console.error('Usage: node scripts/txt_to_pdf.js "<input.txt>" ["<output.pdf>" | --html]');
   process.exit(1);
 }
 if (!fs.existsSync(input)) {
@@ -233,39 +233,33 @@ function renderSection(sec) {
       })
       .join("\n");
   } else if (h.includes("EXPERIENCE")) {
-    // Group each job header (contains "|") with its bullets. The title is kept
+    // Each job header (contains "|") is followed by its bullets. The title is kept
     // with its first bullet (break-after: avoid on .job), so a page break cannot
     // strand it alone, but the bullet list may split across pages. Keeping a
     // whole job on one page would push a long job onto the next page and break
     // the page limit in skills/resume-builder.md.
     let html = "";
-    let blockOpen = false;
     let bullets = [];
-    const closeBlock = () => {
-      if (!blockOpen) return;
-      if (bullets.length) {
-        html += `<ul>${bullets.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
-        bullets = [];
-      }
-      html += `</div>`;
-      blockOpen = false;
+    const flushBullets = () => {
+      if (!bullets.length) return;
+      html += `<ul>${bullets.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
+      bullets = [];
     };
     for (const it of sec.items) {
       if (it.includes("|")) {
-        closeBlock();
+        flushBullets();
         const [left, date] = splitTrailing(it);
         const [title, company] = left.split("|").map((s) => s.trim());
-        html += `<div class="job-block"><div class="job"><span class="job-head"><span class="job-title">${esc(title)}</span>`;
+        html += `<div class="job"><span class="job-head"><span class="job-title">${esc(title)}</span>`;
         if (company) html += ` <span class="job-co">| ${esc(company)}</span>`;
         html += `</span>`;
         if (date) html += `<span class="job-date">${esc(date)}</span>`;
         html += `</div>`;
-        blockOpen = true;
       } else {
         bullets.push(it);
       }
     }
-    closeBlock();
+    flushBullets();
     body = html;
   } else {
     // EDUCATION and anything else: render lines, splitting trailing dates
@@ -326,8 +320,8 @@ function countPages(pdfPath) {
   const text = fs.readFileSync(pdfPath).toString("latin1");
   let max = null;
   for (const m of text.matchAll(/\/Type\s*\/Pages\b/g)) {
-    const window = text.slice(Math.max(0, m.index - 200), m.index + 200);
-    const c = window.match(/\/Count\s+(\d+)/);
+    const nearby = text.slice(Math.max(0, m.index - 200), m.index + 200);
+    const c = nearby.match(/\/Count\s+(\d+)/);
     if (c) max = Math.max(max ?? 0, Number(c[1]));
   }
   return max;
@@ -400,6 +394,10 @@ async function printPdf(browser, htmlPath, outPath) {
     process.exit(1);
   }
   const pages = countPages(output);
-  const suffix = pages === null ? "" : ` (${pages} page${pages === 1 ? "" : "s"})`;
-  console.log(`PDF written to ${output}${suffix}`);
+  if (pages === null) {
+    console.log(`PDF written to ${output}`);
+    console.error("Could not read the page count. Open the PDF and count the pages by hand.");
+  } else {
+    console.log(`PDF written to ${output} (${pages} page${pages === 1 ? "" : "s"})`);
+  }
 })();

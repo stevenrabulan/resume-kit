@@ -89,9 +89,8 @@ that phrase word for word.
   accurate.
 - Only mirror a phrase when it is true. The accuracy guardrails in `AGENTS.md`
   always win over keyword matching.
-- Do not keyword-stuff. Weave phrases into real accomplishment lines and the
-  summary. Never bolt
-  on a phrase with nothing behind it.
+- Do not keyword-stuff. Weave phrases into real Bullets and the summary. Never
+  bolt on a phrase with nothing behind it.
 
 ### 7. Write the `.txt`
 
@@ -131,11 +130,13 @@ Rules the parser depends on:
 - Line 1 is the name. Line 2 is the pipe-separated contact line.
 - Section headings are five words or fewer, start with a capital letter, and
   contain only letters, digits, spaces, `&`, and `/`. A longer line, or one
-  with any other punctuation, is read as a Bullet.
+  with any other punctuation, is read as a Bullet. So a Bullet of five words or
+  fewer with no punctuation ("Mentored six junior engineers") is read as a
+  heading: lengthen it or fold it into another Bullet.
 - Job header lines contain a `|` and separate the date with **two or more
   spaces**.
-- Accomplishment lines have **no** leading `-`, `*`, or `•`.
-- Skill lines are `Label: text`.
+- Bullets have **no** leading `-`, `*`, or `•`.
+- Competencies are `Label: text`.
 
 Style rules, which serve the reader rather than the parser:
 
@@ -173,7 +174,9 @@ regeneration. If it is over the limit from step 5:
 3. Repeat until it fits.
 
 If a two-page resume comes out at one page, consider whether a cut line should
-come back. Never show the user a PDF whose page count you have not checked.
+come back. If the script says it could not read the page count, open the PDF
+and count, or ask the user to. Never show the user a PDF whose page count you
+have not checked.
 
 If the script reports it cannot find a browser, its error message lists the
 fixes. Relay them.

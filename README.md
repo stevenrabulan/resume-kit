@@ -180,8 +180,9 @@ both.
 
 **The PDF looks wrong** — the generator parses the `.txt` literally. Check that
 line 1 is your name, line 2 is your contact line, section headings are five
-words or fewer with no punctuation, job headers contain a `|` with two or more
-spaces before the date, and no bullet line starts with `-` or `•`. The rules are in `skills/resume-builder.md`.
+words or fewer, capitalized, with no punctuation, job headers contain a `|` with
+two or more spaces before the date, and no bullet line starts with `-` or `•`.
+The rules are in `skills/resume-builder.md`.
 
 **The agent is inventing things** — point it back at `AGENTS.md`. If a claim is
 not in your master resume, it should be asking you, not writing it.

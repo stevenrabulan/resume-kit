@@ -59,7 +59,7 @@ _Avoid_: achievement, line item, highlight
 **Skill**:
 A workflow document that an agent reads and follows. Always the agent-facing
 meaning in this repo.
-_Avoid_: using "skill" for a line in a resume's Core Skills section — call that a
+_Avoid_: using "skill" for a line in a resume's Core Skills section; call that a
 Competency
 
 **Competency**:
