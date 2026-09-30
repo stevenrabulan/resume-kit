@@ -13,8 +13,9 @@ Checked on macOS at build time:
   visually reviewed
 - `.gitignore` verified file by file, for both what must be ignored and what must
   stay tracked
-- `check-clean.sh` detectors tested against a planted leak file; email, phone,
-  LinkedIn, and street-address patterns all fired
+- `check-clean.sh` covered by `scripts/check-clean.test.sh` (run in CI): fails on
+  a term in tracked or untracked files, warns on ignored files, fails with no
+  terms
 - Git history scanned end to end for credentials and real contact data. Clean.
   The only personal data in the repo is the copyright holder in `LICENSE`
 

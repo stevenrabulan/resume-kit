@@ -62,8 +62,11 @@ jobs:
           grep -aq 'Font' "$OUT" || { echo "No font objects in the PDF"; exit 1; }
           echo "Rendered $(wc -c < "$OUT") bytes"
 
-      - name: No personal data in tracked files
-        run: bash scripts/check-clean.sh
+      - name: check-clean.sh tests pass
+        run: bash scripts/check-clean.test.sh
+
+      - name: No personal data in tracked or untracked files
+        run: bash scripts/check-clean.sh --allow-no-terms
 
       - name: setup.sh left the tree clean
         run: |

@@ -143,11 +143,15 @@ That is a deliberate choice you have to make, which is the point.
 Before publishing any fork, run:
 
 ```bash
-bash scripts/check-clean.sh
+bash scripts/check-clean.sh "Your Name" "Your Employer" yourdomain.com
 ```
 
-It scans the tree for names, emails, phone numbers, and addresses, and exits
-nonzero if it finds any.
+It scans tracked and untracked files for your terms plus emails, phone numbers,
+and addresses, and exits nonzero on any hit. It also fails if you give it no
+terms, because a check with nothing to search for proves nothing. Personal data
+in ignored files (your Master Resume, your Opportunities) shows up as a warning
+summary, not a failure. It cannot read `.docx` or `.pdf`, so check Archived
+Resumes by hand.
 
 ## What's in here
 
