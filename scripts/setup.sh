@@ -81,7 +81,7 @@ for dir in opportunities resume-archive History; do
   fi
 done
 
-if [ -f .gitignore ] && grep -q '^/master-resume.md' .gitignore; then
+if [ -f .gitignore ] && grep -Eq '^/(master-resume\.md|\*\[Mm\]aster)' .gitignore; then
   pass "personal data is gitignored"
 else
   fail ".gitignore is missing its personal-data rules. Do not commit until fixed."
