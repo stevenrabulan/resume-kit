@@ -2,6 +2,7 @@
 // Convert a tailored resume .txt into an ATS-safe PDF.
 //
 // Usage: node scripts/txt_to_pdf.js "<input.txt>" ["<output.pdf>"]
+//        node scripts/txt_to_pdf.js "<input.txt>" --html   (print HTML, no browser)
 //
 // No npm dependencies. Renders HTML and prints it to PDF using a Chrome or
 // Edge browser you already have installed. If none can be found, see
@@ -16,7 +17,7 @@
 //   blank
 //   summary paragraph
 //   blank
-//   ALLCAPS section headings (no "|"): CORE SKILLS, WORK EXPERIENCE, EDUCATION
+//   section headings (5 words or fewer, no "|"): Core Skills, Work Experience, Education
 //   skill lines:  "Label: text"
 //   job headers:  "TITLE | Company, Location    MM/YYYY - MM/YYYY"  (2+ spaces before the date)
 //   bullet lines: plain text under a job header
@@ -141,7 +142,11 @@ function resolveBrowser() {
 // args & guards
 // ---------------------------------------------------------------------------
 
-const input = process.argv[2];
+const args = process.argv.slice(2);
+// --html prints the rendered HTML to stdout and exits without a browser. It
+// exists so the parser can be tested; see scripts/txt_to_pdf.test.sh.
+const htmlOnly = args.includes("--html");
+const [input, outputArg] = args.filter((a) => a !== "--html");
 if (!input) {
   console.error('Usage: node scripts/txt_to_pdf.js "<input.txt>" ["<output.pdf>"]');
   process.exit(1);
@@ -150,7 +155,7 @@ if (!fs.existsSync(input)) {
   console.error(`Input not found: ${input}`);
   process.exit(1);
 }
-const output = process.argv[3] || input.replace(/\.txt$/i, ".pdf");
+const output = outputArg || input.replace(/\.txt$/i, ".pdf");
 
 // ---------------------------------------------------------------------------
 // parse
@@ -164,7 +169,14 @@ function splitTrailing(line) {
   return m ? [m[1].trim(), m[2].trim()] : [line.trim(), ""];
 }
 
-const isHeading = (l) => /^[A-Z0-9][A-Z0-9 &/]+$/.test(l) && !l.includes("|");
+// A heading is a short, unpunctuated, capitalized line: "WORK EXPERIENCE",
+// "Core Skills & Achievements". The word cap matters: without it, any bullet
+// with no commas, digits, or periods ("Tokenized PII and transaction details
+// to protect customer data") becomes a heading and swallows the bullets below.
+const isHeading = (l) =>
+  !l.includes("|") &&
+  /^[A-Z][A-Za-z0-9 &/]+$/.test(l) &&
+  l.trim().split(/\s+/).length <= 5;
 
 const raw = fs.readFileSync(input, "utf-8").replace(/\r\n/g, "\n");
 const lines = raw.split("\n");
@@ -179,7 +191,7 @@ if (!name || !contact) {
   process.exit(1);
 }
 
-// summary = everything until the first ALLCAPS heading
+// summary = everything until the first heading
 const summaryLines = [];
 while (i < lines.length && !isHeading(lines[i].trim())) {
   if (lines[i].trim()) summaryLines.push(lines[i].trim());
@@ -221,8 +233,11 @@ function renderSection(sec) {
       })
       .join("\n");
   } else if (h.includes("EXPERIENCE")) {
-    // Group each job header (contains "|") with its bullets in one block, so a
-    // page break cannot strand a job title alone at the bottom of a page.
+    // Group each job header (contains "|") with its bullets. The title is kept
+    // with its first bullet (break-after: avoid on .job), so a page break cannot
+    // strand it alone, but the bullet list may split across pages. Keeping a
+    // whole job on one page would push a long job onto the next page and break
+    // the page limit in skills/resume-builder.md.
     let html = "";
     let blockOpen = false;
     let bullets = [];
@@ -278,13 +293,12 @@ const html = `<!doctype html><html><head><meta charset="utf-8">
   h1 { font-size: 19pt; margin: 0 0 2px; letter-spacing: .3px; }
   .contact { font-size: 9pt; color: #333; margin: 0 0 10px; }
   .summary { margin: 0 0 12px; }
-  h2 { font-size: 11pt; text-transform: uppercase; letter-spacing: .6px;
+  h2 { font-size: 11pt; letter-spacing: .3px;
        border-bottom: 1px solid #888; padding-bottom: 2px; margin: 14px 0 7px; }
   p { margin: 0 0 6px; }
   .skill { margin: 0 0 5px; }
   .skill-label { font-weight: bold; }
-  .job-block { break-inside: avoid-page; page-break-inside: avoid; }
-  .job { display: flex; justify-content: space-between; align-items: baseline; margin: 9px 0 2px; gap: 12px; }
+  .job { display: flex; justify-content: space-between; align-items: baseline; margin: 9px 0 2px; gap: 12px; break-after: avoid; page-break-after: avoid; }
   .job-head { font-weight: bold; }
   .job-date { color: #333; white-space: nowrap; font-size: 9.5pt; }
   ul { margin: 2px 0 6px; padding-left: 18px; }
@@ -296,9 +310,28 @@ const html = `<!doctype html><html><head><meta charset="utf-8">
 ${sectionsHtml}
 </body></html>`;
 
+if (htmlOnly) {
+  process.stdout.write(html);
+  process.exit(0);
+}
+
 // ---------------------------------------------------------------------------
 // print to PDF
 // ---------------------------------------------------------------------------
+
+// Page count read from the PDF's page tree, so the page limit in
+// skills/resume-builder.md can be checked without a PDF library. Returns null
+// if the tree cannot be found (for example, a compressed object stream).
+function countPages(pdfPath) {
+  const text = fs.readFileSync(pdfPath).toString("latin1");
+  let max = null;
+  for (const m of text.matchAll(/\/Type\s*\/Pages\b/g)) {
+    const window = text.slice(Math.max(0, m.index - 200), m.index + 200);
+    const c = window.match(/\/Count\s+(\d+)/);
+    if (c) max = Math.max(max ?? 0, Number(c[1]));
+  }
+  return max;
+}
 
 async function printPdf(browser, htmlPath, outPath) {
   if (browser.kind === "binary") {
@@ -366,5 +399,7 @@ async function printPdf(browser, htmlPath, outPath) {
     console.error("The browser did not produce a PDF.");
     process.exit(1);
   }
-  console.log(`PDF written to ${output}`);
+  const pages = countPages(output);
+  const suffix = pages === null ? "" : ` (${pages} page${pages === 1 ? "" : "s"})`;
+  console.log(`PDF written to ${output}${suffix}`);
 })();

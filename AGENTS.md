@@ -38,7 +38,7 @@ these already covers.
 file, in `skills/`, and in the stubs. It names two exemptions, `README.md` and
 what you say out loud to the user, and explains why. It resolves words that are
 genuinely overloaded here, including **Skill** (an agent workflow) versus
-**Competency** (a line in a resume's CORE SKILLS section).
+**Competency** (a line in a resume's Core Skills section).
 
 ## Modifying this repo
 
@@ -66,6 +66,7 @@ docs/STATUS.md            what is verified, what is open
 scripts/
   setup.sh                environment preflight; `--agent` when you run it
   txt_to_pdf.js           .txt resume -> ATS-safe PDF
+  txt_to_pdf.test.sh      tests for txt_to_pdf.js; runs in CI
   check-clean.sh          scans for personal data before publishing a fork
   check-clean.test.sh     tests for check-clean.sh; runs in CI
 examples/                 a fictional worked example, committed on purpose

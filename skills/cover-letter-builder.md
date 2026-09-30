@@ -80,6 +80,12 @@ about something specific.
 - **Let some personality through.** Enthusiasm for the actual problem space is
   the most credible thing in the letter.
 
+## Before you finalize
+
+If a detail you do not have would make the letter stronger, such as a personal
+connection to the company or a product the user actually uses, ask for it before
+finalizing. Otherwise present the draft as it is.
+
 ## Output format
 
 Save to:
