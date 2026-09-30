@@ -67,6 +67,7 @@ scripts/
   setup.sh                environment preflight; `--agent` when you run it
   txt_to_pdf.js           .txt resume -> ATS-safe PDF
   check-clean.sh          scans for personal data before publishing a fork
+  check-clean.test.sh     tests for check-clean.sh; runs in CI
 examples/                 a fictional worked example, committed on purpose
 opportunities/            one folder per company you apply to (gitignored)
 resume-archive/           Archived Resumes, source material (gitignored)
@@ -95,7 +96,9 @@ can commit their own data by editing `.gitignore`, but the default is safe.
 fictional person. Never put real user data there.
 
 Before anyone publishes a fork, `bash scripts/check-clean.sh` scans the tree for
-personal data and exits nonzero on a hit.
+personal data and exits nonzero on a hit in tracked or untracked files. It needs
+search terms (your name, employers, domain) and fails without them. Personal data
+in ignored files only warns. It cannot read `.docx` or `.pdf`.
 
 ## Accuracy guardrails
 
